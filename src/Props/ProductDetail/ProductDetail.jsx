@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Item from "./Item";
+import Cart from "./Cart";
 const DataPhone = [
   {
     maSP: 1,
@@ -53,12 +54,69 @@ export default class ProductDetail extends Component {
       giaBan: 27000000,
       hinhAnh: "./img/applephone.jpg",
     },
+    arrGioHang: [
+      {
+        maSP: 3,
+        tenSP: "Iphone XS Max",
+        giaBan: 27000000,
+        hinhAnh: "./img/applephone.jpg",
+        soLuong: 2,
+      },
+    ],
+  };
+
+  tangGiamSoLuong = (maSP, Soluong) => {
+    let gioHang = this.state.arrGioHang;
+    let updateSoLuong = gioHang.find((item) => item.maSP === maSP);
+    if (updateSoLuong) {
+      updateSoLuong.soLuong += Soluong;
+      if (updateSoLuong.soLuong < 1) {
+        if (window.confirm("ban co muon xoa khong")) {
+          this.xoaSanPham(updateSoLuong.maSP);
+          return;
+        } else {
+          updateSoLuong.soLuong -= Soluong;
+          return;
+        }
+      }
+    }
+    this.setState({
+      arrGioHang: this.state.arrGioHang,
+    });
+  };
+  xoaSanPham = (maSP) => {
+    let index = this.state.arrGioHang.findIndex((item) => item.maSP === maSP);
+    if (index !== -1) {
+      this.state.arrGioHang.splice(index, 1);
+    }
+    this.setState({
+      arrGioHang: this.state.arrGioHang,
+    });
+  };
+  //
+  themGioHang = (SpClick) => {
+    SpClick = { ...SpClick, soLuong: 1 };
+    //Kiểm tra sản phẩm đã có trong arr giỏ hàng hay chưa nếu có thì tăng số lượng chưa thì thêm vô
+    let gioHang = this.state.arrGioHang;
+    let spGH = gioHang.find((item) => item.maSP === SpClick.maSP);
+    if (spGH) {
+      spGH.soLuong += 1;
+    } else {
+      gioHang.push(SpClick);
+    }
+    this.setState({
+      arrGioHang: this.state.arrGioHang,
+    });
   };
   renderTable = () => {
     let arrJSX = DataPhone.map((phone) => {
       return (
         <div className="col-md-4 mt-2" key={phone.maSP}>
-          <Item item={phone} xemChiTiet={this.xemChiTiet} />
+          <Item
+            themGioHang={this.themGioHang}
+            item={phone}
+            xemChiTiet={this.xemChiTiet}
+          />
         </div>
       );
     });
@@ -73,6 +131,12 @@ export default class ProductDetail extends Component {
   render() {
     return (
       <div className="container">
+        {" "}
+        <Cart
+          tangGiamgSoLuong={this.tangGiamSoLuong}
+          xoaSanPham={this.xoaSanPham}
+          arrGioHang={this.state.arrGioHang}
+        />
         <h3>Danh Sach San Pham</h3>
         <div className="row">{this.renderTable()}</div>
         <br />

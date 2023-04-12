@@ -12,10 +12,21 @@ import DemoLogin from "./State/DemoLogin";
 import DemoPageLogin from "./State/DemoPageLogin";
 import DemoState from "./State/DemoState";
 import StyleDemo from "./StyleDemo/StyleDemo";
-
+//Cấu hình react router dom
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import HomeTemplate from "./Templates/HomeTemplate";
+import Cart from "./Props/ProductDetail/Cart";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="" element={<HomeTemplate />}>
+          <Route index element={<Home />}></Route>
+          <Route path="cart" element={<ProductDetail />}></Route>
+        </Route>
+      </Routes>
+    </BrowserRouter>
     {/* <Home/> */}
     {/* <DataBinding /> */}
     {/* <HandleEvent /> */}
@@ -26,6 +37,7 @@ root.render(
     {/* <DemoPageLogin /> */}
     {/* <DemoProps /> */}
     {/* <ProductList /> */}
-    <ProductDetail />
+    {/* 
+    <ProductDetail /> */}
   </div>
 );
